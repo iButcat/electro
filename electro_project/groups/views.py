@@ -47,7 +47,7 @@ class PostGroupFormView(LoginRequiredMixin, SingleObjectMixin, FormView):
     template_name = 'group/detail_group.html'
 
     def get_object(self):
-        return get_object_or_404(Group, pk=self.kwargs['pk'])
+        return get_object_or_404(Group, pk=self.kwargs.get('pk'))
 
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -55,13 +55,12 @@ class PostGroupFormView(LoginRequiredMixin, SingleObjectMixin, FormView):
         self.object = self.get_object()
         return super().post(request, *args, **kwargs)
 
-    # we are trying to make a form from post object
-    # then we want to add it to grouppost for associate both
     def form_valid(self, form):
         form = PostForm()
         if self.request.method == "POST":
             form = PostForm(self.request.POST)
             if form.is_valid():
+                form.save(commit=False)
                 form.instance.group = self.get_object()
                 form.instance.user = self.request.user
                 form.save(commit=True)

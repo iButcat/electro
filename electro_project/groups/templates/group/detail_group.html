@@ -61,9 +61,10 @@
                   <div class="col-md-4">
                       <div class="card">
                           <div class="card-content">
-                              <h4 class="card-title">{{ post.title }}</h4>
+                              <h4 class="card-title"><a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a></h4>
                                <p class="card-text">{{ post.content }}</p>
                                <p><a href="{% url 'groups:redirect' post.user.pk %}">{{ post.user }}</a></p>
+
                                <p>{{ post.date_post }}</p>
                           </div>
                       </div>

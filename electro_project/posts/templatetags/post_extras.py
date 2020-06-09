@@ -6,4 +6,4 @@ register = template.Library()
 
 @register.filter(name='cut')
 def cut_post_group(value):
-    return Post.objects.exclude(group=True)
+    return Post.objects.exclude(group__isnull=False)
