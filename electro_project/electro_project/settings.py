@@ -142,6 +142,6 @@ STATICFILES_DIRS = [
 ]
 
 # probably need to delete the /img because overwritting it => img/img
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/img')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATIC_ROOT = 'electro_project/static'
