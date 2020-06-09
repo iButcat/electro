@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.http import HttpResponseForbidden
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import F
 
 from . import forms
 from .forms import UserInfoForm
@@ -63,14 +64,10 @@ class DetailUserProfile(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DetailUserProfile, self).get_context_data(**kwargs)
         context['infos'] = self.get_object()
-        posts = Post.objects.filter(pk=self.kwargs['pk'])
-        context['posts'] = posts
-        post_numbers = Post.objects.filter(user=self.request.user).count()
-        context['post_numbers'] = post_numbers
-        groups = Group.objects.filter(pk=self.kwargs['pk'])
-        context['groups'] = groups
-        friends = FriendRequest.objects.all()
-        context['friends'] = friends
+        context['posts'] = Post.objects.all().filter(user=self.kwargs['pk'])
+        context['post_numbers'] = Post.objects.filter(user=self.kwargs['pk']).count()
+        context['groups'] = Group.objects.filter(pk=self.kwargs['pk'])
+        context['friends'] = FriendRequest.objects.all()
         return context
 
 
