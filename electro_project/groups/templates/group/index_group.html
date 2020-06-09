@@ -18,13 +18,13 @@
                               <hr>
                                <p class="card-text">{{ group.description }}<p>
                                <p>Number of members: {{ group.members.count }}</p>
-                               <p class="card-footer">Owner: {{ group.owner }}</p>
+                               <p class="card-footer"><a href="{% url 'groups:redirect' group.owner.pk %}">Owner: {{ group.owner }}</a></p>
                               <br>
-                          </div><!-- card content -->
-                      </div><!-- card -->
-                  </div><!-- col-md-4 -->
-            {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
+                          </div>
+                      </div>
+                  </div>
+            {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><hr>{%  endif %}
             {%  endfor %}
-         </div><!-- container -->
+         </div>
 
 {% endblock %}

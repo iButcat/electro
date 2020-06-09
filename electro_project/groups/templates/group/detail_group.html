@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+{% if group.owner == request.user %}       <!-- user.pk -->
+<div class="container">
+  <a href="{% url 'groups:update' pk=group.pk %}">Update Group</a>
+</div>
+<div class="container">
+  <a href="{% url 'groups:delete' pk=group.pk %}">Delete Group</a>
+</div>
+{% endif %}
+
+<div class="container">
+  <h1>{{ group.title }}</h1>
+  <ul>
+    <li>{{ group.description }}</li>
+    <li>{{ group.members.count }}</li>
+    <li><a href="{% url 'groups:redirect' group.owner.pk %}">{{ group.owner }}</a></li>
+  </ul>
+</div>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if user.is_authenticated %}
+<div class="container-fluid">
+  <a class="btn btn-primary" href="{% url 'groups:join' pk=group.pk %}">Join</a>
+</div>
+
+<div class="container-fluid">
+  <a class="btn btn-primary" href="{% url 'groups:leave' pk=group.pk %}">Leave</a>
+</div>
+
+{% else %}
+<div class="container">
+  <h3> Login or Signup</h3>
+  <h4>You must be login for join a group</h4>
+  <a href="{% url 'electro:login'  %}">Login</a>
+  <a href="{% url 'electro:signup'  %}">Register</a>
+{% endif %}
+
+
+<div class="container" id="padding">
+ <form method="POST" action="{% url 'groups:detail' group.pk %}">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" name="" value="">Submit</button>
+  </form>
+</div>
+
+
+<div class="container" id="padding">
+            {%  for post in postgroup %}
+                {% if forloop.counter0|divisibleby:3 %} <div class="row text-center"> {%  endif %}
+                  <div class="col-md-4">
+                      <div class="card">
+                          <div class="card-content">
+                              <h4 class="card-title">{{ post.title }}</h4>
+                               <p class="card-text">{{ post.content }}</p>
+                               <p><a href="{% url 'groups:redirect' post.user.pk %}">{{ post.user }}</a></p>
+                               <p>{{ post.date_post }}</p>
+                          </div>
+                      </div>
+                  </div>
+            {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
+            {%  endfor %}
+         </div>
+
+{% endblock %}

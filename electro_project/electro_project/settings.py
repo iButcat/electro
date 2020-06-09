@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'electro_social',
     'posts',
-    'groups'
+    'groups',
 ]
 
 MIDDLEWARE = [

@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from electro_social.models import UserInfo
-from posts.models import Post
 
 
 class Group(models.Model):
@@ -11,8 +10,6 @@ class Group(models.Model):
     members = models.ManyToManyField(User, blank=True, through='Member')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
     on_delete=models.CASCADE, blank=True, null=True, related_name='owner')
-    post = models.ForeignKey(Post, blank=True, null=True,
-    on_delete=models.CASCADE)
 
     def __str__(self):
         return "{}, title: {}".format(self.owner, self.title)

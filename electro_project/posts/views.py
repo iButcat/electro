@@ -51,7 +51,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         return reverse("posts:detail", kwargs={'pk': self.object.pk})
 
 
-# => Update post
+# => Update post view
 class UpdatePostView(LoginRequiredMixin, UpdateView):
 
     login_url = 'electro/login'
@@ -175,6 +175,3 @@ class RedirectAddDislike(LoginRequiredMixin, RedirectView):
         post = get_object_or_404(Post, id=request.POST.get('post_id'))
         post.like.remove(self.request.user)
         return super(RedirectAddDislike, self).get(request, *args, **kwargs)
-
-
-

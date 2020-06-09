@@ -18,10 +18,9 @@ class UserCommentForm(ModelForm):
     class Meta:
         model = Commentary
         fields = ['title', 'comment']
+        exclude = ['group']
 
         widgets = {
         'title': forms.TextInput(attrs={'class': 'textinputclass'}),
         'comment': forms.Textarea(attrs={'class': 'editable medium-editor-textarea'}),
         }
-
-

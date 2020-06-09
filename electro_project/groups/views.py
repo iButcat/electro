@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from django.views.generic import View, TemplateView, ListView, DetailView, RedirectView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import (CreateView, UpdateView, DeleteView,
+FormView, SingleObjectMixin)
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from .forms import GroupFrom, PostInGroupForm
+from django.forms.models import inlineformset_factory
+
+from .forms import GroupFrom, PostForm
 from .models import Group, Member
 
 from django.contrib.auth.models import User
@@ -15,7 +18,7 @@ from posts.models import Post
 
 class GroupListView(ListView):
 
-    template_name = 'index_group.html'
+    template_name = 'group/index_group.html'
     model = Group
     context_object_name = 'groups'
 
@@ -27,28 +30,56 @@ class GroupListView(ListView):
 class GroupDetailView(DetailView):
 
     model = Group
-    template_name = 'detail_group.html'
+    template_name = 'group/detail_group.html'
     context_object_name = 'group'
 
     def get_context_data(self, **kwargs):
         context = super(GroupDetailView, self).get_context_data(**kwargs)
-        context['form'] = PostInGroupForm()
-        context['postgroups'] = Group.objects.filter(post=self.kwargs['pk'])
+        context['form'] = PostForm()
+        context['postgroup'] = Post.objects.filter(group=self.kwargs['pk'])
         return context
 
 
-# redirect for save post in group
-class RedirectAddPostGroup(RedirectView):
+class PostGroupFormView(LoginRequiredMixin, SingleObjectMixin, FormView):
 
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse_lazy('groups:detail',
-        kwargs={'pk': self.kwargs.get('pk')})
+    model = Post
+    form_class = PostForm
+    template_name = 'group/detail_group.html'
+
+    def get_object(self):
+        return get_object_or_404(Group, pk=self.kwargs['pk'])
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    # we are trying to make a form from post object
+    # then we want to add it to grouppost for associate both
+    def form_valid(self, form):
+        form = PostForm()
+        if self.request.method == "POST":
+            form = PostForm(self.request.POST)
+            if form.is_valid():
+                form.instance.group = self.get_object()
+                form.instance.user = self.request.user
+                form.save(commit=True)
+        return super(PostGroupFormView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('groups:detail', kwargs={'pk': self.object.pk})
+
+
+class MixinDetailAndFormView(View):
 
     def get(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, pk=self.kwargs.get('id'))
-        # id=request.POST.get('post')
-        obj, created = Group.objects.get_or_create(post=post)
-        return super(RedirectAddPostGroup, self).get(request, *args, **kwargs)
+        view = GroupDetailView.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = PostGroupFormView.as_view()
+        return view(request, *args, **kwargs)
 
 
 # create group view
@@ -56,7 +87,7 @@ class CreateGroupView(CreateView):
 
     form_class = GroupFrom
     model = Group
-    template_name = 'create_group.html'
+    template_name = 'group/create_group.html'
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -76,8 +107,13 @@ class JoinGroup(LoginRequiredMixin, RedirectView):
 
     def get(self, request, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.kwargs.get('pk'))
-        obj, created = Member.objects.get_or_create(user=self.request.user, group=group)
-        #Member.objects.create(user=self.request.user, group=group)
+        if not Member.objects.filter(group=group, user=self.request.user):
+            obj, created = Member.objects.get_or_create(user=self.request.user,
+            group=group)
+            if created:
+                messages.success(request, 'You are now a member')
+        else:
+            messages.add_message(request, messages.INFO, 'You are already a member')
         return super(JoinGroup, self).get(request, *args, **kwargs)
 
 
@@ -90,13 +126,15 @@ class LeaveGroup(LoginRequiredMixin, RedirectView):
 
     def get(self, request, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.kwargs.get('pk'))
-        Member.objects.filter(user=self.request.user, group=group).delete()
+        delete_member = Member.objects.filter(user=self.request.user, group=group).delete()
+        if delete_member:
+            messages.success(request, 'You leave the group')
         return super(LeaveGroup, self).get(request, *args, **kwargs)
 
 
 # update group view
 class UpdateGroupView(UpdateView):
-    template_name = 'update_group.html'
+    template_name = 'group/update_group.html'
     model = Group
     form_class = GroupFrom
 
@@ -106,6 +144,6 @@ class UpdateGroupView(UpdateView):
 
 # delete view
 class DeleteGroupView(DeleteView):
-    template_name = 'delete_group.html'
+    template_name = 'group/delete_group.html'
     model = Group
     success_url = reverse_lazy('groups:list')

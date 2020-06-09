@@ -9,5 +9,6 @@ class GroupAdmin(admin.ModelAdmin):
 class MemberAdmin(admin.ModelAdmin):
     pass
 
+
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Member, MemberAdmin)

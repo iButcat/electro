@@ -5,6 +5,8 @@ from django.urls import reverse_lazy
 
 from electro_social.models import UserInfo
 
+from groups.models import Group
+
 
 class Post(models.Model):
     title = models.CharField(max_length=40)
@@ -14,6 +16,8 @@ class Post(models.Model):
     on_delete=models.CASCADE)
     like = models.ManyToManyField(User, related_name='likes',
     blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE,
+    blank=True, null=True)
 
     def __str__(self):
         return "{}, {}".format(self.user, self.title)
@@ -26,7 +30,7 @@ class Post(models.Model):
 
 
 class Commentary(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True, 
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True,
     null=True)
     title = models.CharField(max_length=30)
     comment = models.TextField()
