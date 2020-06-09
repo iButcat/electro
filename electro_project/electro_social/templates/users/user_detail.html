@@ -10,7 +10,7 @@
 	<div class="card">
 		{% for info in infos %}
 		{% if info.profile_picture %}
-      <img class="card-image-top" src="{{ info.profile_picture.url }}">
+      <img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
 			{% endif %}
   <h1 class="card-title"> Profile's name: {{ info.user }} </h1>
 </div>
