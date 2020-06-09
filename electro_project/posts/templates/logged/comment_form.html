@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+{% if user.is_authenticated %}
+
+<div class="container">
+  <form  method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" class="btn btn-primary" value="comment">
+  </form>
+</div>
+
+{% else %}
+<div class="container text-center">
+  <a class="btn btn-primary" href="{% url 'electro:signup' %}">SignUp</a>
+  <a class="btn btn-primary" href="{% url 'electro:login' %}">Connect</a>
+</div>
+
+{% endif %}
+
+{% endblock %}

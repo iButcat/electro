@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+{% if group.owner == request.user %}       <!-- user.pk -->
+<div class="container">
+  <a href="{% url 'groups:update' pk=group.pk %}">Update Group</a>
+</div>
+<div class="container">
+  <a href="{% url 'groups:delete' pk=group.pk %}">Delete Group</a>
+</div>
+{% endif %}
+
+<div class="container">
+  <h1>{{ group.title }}</h1>
+  <ul>
+    <li>{{ group.description }}</li>
+    <li>{{ group.members.count }}</li>
+    <li>{{ group.owner }}</li>
+  </ul>
+</div>
+
+{% if user.is_authenticated %}
+<div class="container-fluid">
+  <a class="btn btn-primary" href="{% url 'groups:join' pk=group.pk %}">Join</a>
+</div>
+
+<div class="container-fluid">
+  <a class="btn btn-primary" href="{% url 'groups:leave' pk=group.pk %}">Leave</a>
+</div>
+
+{% else %}
+<div class="container">
+  <h3> Login or Signup</h3>
+  <h4>You must be login for join a group</h4>
+  <a href="{% url 'electro:login'  %}">Login</a>
+  <a href="{% url 'electro:signup'  %}">Register</a>
+{% endif %}
+
+
+<div class="container" id="padding">
+ <form method="POST" action="{% url 'groups:redirect' pk=group.pk %}">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" name="post" value="{{ post.id }}">Submit</button>
+  </form>
+</div>
+
+{% if group.post %}
+<div class="container" id="padding">
+  <p>{{ group.post.title }}</p>
+  <p>{{ group.post.content }}</p>
+</div>
+{% else %}
+<h3>No post</h3>
+{% endif %}
+
+{% endblock %}

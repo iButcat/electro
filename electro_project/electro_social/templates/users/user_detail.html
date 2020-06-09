@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+{% if user.is_authenticated %}
+<div class="padding">
+<div class="container">
+	<div class="card">
+		{% for info in infos %}
+		{% if info.profile_picture %}
+      <img class="card-image-top" src="{{ info.profile_picture.url }}">
+			{% endif %}
+  <h1 class="card-title"> Profile's name: {{ info.user }} </h1>
+</div>
+  <ul>
+    <li class="card-text">Bio: {{ info.description }}</li>
+    {% if not info.friends %}
+    <li class="card-text">Friends: {{ info.friends.count }}</li>
+    {% else %}
+    <li>No friends</li>
+    {% endif %}
+	{% endfor %}
+  </ul>
+</div>
+</div>
+</div>
+
+<div class="padding">
+<div class="container">
+  <h3>User's posts</h3>
+{% for post in posts %}
+<p>{{ post_numbers }}</p>
+  <ul>
+    <li>{{ post.title }}</li>
+  <li>{{ post.content }}</li>
+    <li>{{ post.date_post }}</li>
+  </ul>
+  {% endfor %}
+</div>
+</div>
+
+
+<div class="container">
+	{% for friend in friends %}
+	<p>{{ friend.to_user }}</p>
+	<p>{{ friend.from_user }}</p>
+	{% endfor %}
+</div>
+<div class="btn btn-primary">
+<a href="{% url 'electro:accept' user.id %}">Accept</a>
+</div>
+
+<div class="padding">
+<div class="container">
+  <div class="btn btn-primary">
+  <a href="{% url 'electro:add' user.id %}">Add <svg class="bi bi-person-plus-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7.5-3a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+  <path fill-rule="evenodd" d="M13 7.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0v-2z"/>
+</svg></a>
+</div>
+</div>
+</div>
+
+{% endif %}
+{% endblock %}

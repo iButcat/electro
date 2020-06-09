@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+     <link rel="stylesheet" type="text/css" href="{% static 'css/style_electro.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Electro Social</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <a class="navbar-brand" href="{% url 'index' %}"><svg class="bi bi-lightning" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41 4.157 8.5z"/>
+      </svg>Electro</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+     <div class="collapse navbar-collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+          <!--  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a> -->
+          </li>
+      {% if not user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'electro:signup' %}">SignUp</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'electro:login' %}">Connect</a>
+      </li>
+      {% endif %}
+
+	  <!-- User part -->
+
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+        <div class="btn-group">
+  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">User
+     <svg class="bi bi-person-circle" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+     <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+     <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+     <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+   </svg>
+   </button>
+   <div class="dropdown-menu">
+      <a class="dropdown-item" href="{% url 'redirect' request.user.pk %}">Your Profile</a>
+      <a class="dropdown-item" href="{% url 'electro:user' %}">Profile</a>
+      <a class="dropdown-item" href="{% url 'electro:update' request.user.pk %}">Modify</a>
+      <div class="dropdown-divider"></div>
+   <a class="dropdown-item" href="{% url 'electro:logout' %}">Logout  <svg class="bi bi-power" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M5.578 4.437a5 5 0 1 0 4.922.044l.5-.866a6 6 0 1 1-5.908-.053l.486.875z"/>
+  <path fill-rule="evenodd" d="M7.5 8V1h1v7h-1z"/>
+</svg></a>
+    </div>
+   </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'posts:list' %}">Post
+          <svg class="bi bi-chat-square-quote-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.5a1 1 0 0 0-.8.4l-1.9 2.533a1 1 0 0 1-1.6 0L5.3 12.4a1 1 0 0 0-.8-.4H2a2 2 0 0 1-2-2V2zm7.194 2.766c.087.124.163.26.227.401.428.948.393 2.377-.942 3.706a.446.446 0 0 1-.612.01.405.405 0 0 1-.011-.59c.419-.416.672-.831.809-1.22-.269.165-.588.26-.93.26C4.775 7.333 4 6.587 4 5.667 4 4.747 4.776 4 5.734 4c.271 0 .528.06.756.166l.008.004c.169.07.327.182.469.324.085.083.161.174.227.272zM11 7.073c-.269.165-.588.26-.93.26-.958 0-1.735-.746-1.735-1.666 0-.92.777-1.667 1.734-1.667.271 0 .528.06.756.166l.008.004c.17.07.327.182.469.324.085.083.161.174.227.272.087.124.164.26.228.401.428.948.392 2.377-.942 3.706a.446.446 0 0 1-.613.01.405.405 0 0 1-.011-.59c.42-.416.672-.831.81-1.22z"/>
+          </svg>
+        </a>
+      </li>
+      <li class="nav-item">
+        <div class="btn-group">
+   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+     Group
+     <svg class="bi bi-people-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+       <path fill-rule="evenodd" d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+    </svg>
+   </button>
+  <div class="dropdown-menu">
+     <a class="dropdown-item" href="{% url 'groups:list' %}">List</a>
+     <a class="dropdown-item" href="{% url 'groups:create' %}">Create</a>
+     <a class="dropdown-item" href="#">Something else here</a>
+     <div class="dropdown-divider"></div>
+     <a class="dropdown-item" href="#">Separated link</a>
+   </div>
+ </div>
+
+      {% endif %}
+
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+  </div>
+    {% block page_content %}
+
+    {% endblock %}
+    <footer class="container-fluid text-center">
+      <div class="padding">
+        <div class="row">
+          <div class="col-sm-4">
+            <h3>Something</h3>
+            <br>
+            <h4>Something</h4>
+          </div>
+          <div class="col-sm-4">
+            <h3>Connect</h3>
+            <a href="#" class="socialicon"><i class="fab fa-github-square"></i></a>
+            <a href="#" class="socialicon"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="socialicon"><i class="fab fa-discord"></i></a>
+          </div>
+          <div class="col-sm-4">
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

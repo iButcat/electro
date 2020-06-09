@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+<form method="POST">
+  {% csrf_token %}
+  <p> Are you sure you want to delete "{{ group }}?"</p>
+  <input type="submit" value="Comfirm">
+
+{% endblock %}
