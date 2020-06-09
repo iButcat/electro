@@ -66,7 +66,7 @@ class DetailUserProfile(DetailView):
         context['infos'] = self.get_object()
         context['posts'] = Post.objects.all().filter(user=self.kwargs['pk'])
         context['post_numbers'] = Post.objects.filter(user=self.kwargs['pk']).count()
-        context['groups'] = Group.objects.filter(pk=self.kwargs['pk'])
+        context['groups'] = Group.objects.filter(members=self.kwargs['pk'])
         context['friends'] = FriendRequest.objects.all()
         return context
 
