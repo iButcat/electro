@@ -27,20 +27,22 @@
 </div>
 </div>
 
-<div class="padding">
-<div class="container">
-  <h3>User's posts</h3>
-{% for post in posts %}
-<p>{{ post_numbers }}</p>
-  <ul>
-    <li>{{ post.title }}</li>
-  <li>{{ post.content }}</li>
-    <li>{{ post.date_post }}</li>
-  </ul>
-  {% endfor %}
-</div>
-</div>
 
+<div class="container">
+          {%  for post in posts  %}
+              {% if forloop.counter0|divisibleby:3 %} <div class="row text-center"> {%  endif %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-content">
+													<h4 class="card-header"><a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a></h4>
+													<p class="card-text">{{ post.content }}</p>
+													<p class="card-text">{{ post.date_post }}</p>
+                        </div>
+                    </div>
+                </div>
+          {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
+          {%  endfor %}
+        </div>
 
 <div class="container">
 	{% for friend in friends %}
