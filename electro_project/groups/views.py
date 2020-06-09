@@ -16,6 +16,8 @@ from electro_social.models import UserInfo
 
 from posts.models import Post
 
+
+# List of group 
 class GroupListView(ListView):
 
     template_name = 'group/index_group.html'
