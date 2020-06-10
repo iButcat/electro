@@ -64,13 +64,25 @@
                               <h4 class="card-title"><a href="{% url 'posts:detail' post.pk %}">{{ post.title }}</a></h4>
                                <p class="card-text">{{ post.content }}</p>
                                <p><a href="{% url 'groups:redirect' post.user.pk %}">{{ post.user }}</a></p>
-
                                <p>{{ post.date_post }}</p>
+                               <form action="{% url 'posts:like' post.pk %}" method="POST">
+                        		    {% csrf_token %}
+                        		    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">
+                        			    Like
+                        		    </button>
+                         	     </form>
+                               <form action="{% url 'posts:dislike' post.pk %}" method="POST">
+                       		    {% csrf_token %}
+                       		    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">
+                       			    Dislike
+                       		    </button>
+                        	    </form>
                           </div>
                       </div>
                   </div>
             {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
             {%  endfor %}
          </div>
+
 
 {% endblock %}
