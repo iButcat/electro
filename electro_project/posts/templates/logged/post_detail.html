@@ -45,6 +45,7 @@
   </form>
 </div>
 
+{% block like_dislike %}
 <div class="container">
 	<p>
        <form action="{% url 'posts:like' post.pk %}" method="POST">
@@ -63,4 +64,5 @@
  	    </form>
 	</p>
 </div>
+{% endblock %}
 {% endblock %}
