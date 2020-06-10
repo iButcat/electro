@@ -13,7 +13,7 @@ from django.db import models
 from django.db.models import F
 
 from . import forms
-from .forms import UserInfoForm
+from .forms import UserInfoForm, UserProfileSearchForm
 from .models import UserInfo, FriendRequest
 
 from posts.models import Post, Commentary
@@ -30,8 +30,15 @@ class SignUp(CreateView):
 # list of all users available
 class DisplayUserInfoView(ListView):
     model = UserInfo
+    form_class = UserProfileSearchForm
     template_name = 'users/user_profile.html'
     context_object_name = 'infos'
+
+    def get_queryset(self):
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            return UserInfo.objects.filter(user__username__icontains=form.cleaned_data['user'])
+        return UserInfo.objects.all()
 
 
 # this is where we fill the UserInfo => - description - profile pic
@@ -41,13 +48,15 @@ class UserInfoFormView(FormView, LoginRequiredMixin):
     form_class = UserInfoForm
 
     def form_valid(self, form):
+        form = UserInfoForm()
         if form.is_valid():
+            form.instance.user = self.request.user
             form.save()
-        return super(UserInfoForm, self).form_valid(form)
+        return super(UserInfoFormView, self).form_valid(form)
 
     # suppose to send the success url but not working with args
     def get_success_url(self):
-         return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs['pk']})
+         return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs})
 
 
 # Detail of UserProfile with extra data => - Posts - Groups
