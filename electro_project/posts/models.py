@@ -39,7 +39,7 @@ class Commentary(models.Model):
     on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return "comment: {}".format(self.comment)
+        return "comment: {}".format(self.title)
 
     class Meta:
         ordering = ['title']
