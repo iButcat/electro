@@ -17,7 +17,7 @@ from electro_social.models import UserInfo
 from posts.models import Post
 
 
-# List of group 
+# List of group
 class GroupListView(ListView):
 
     template_name = 'group/index_group.html'
@@ -127,7 +127,8 @@ class LeaveGroup(LoginRequiredMixin, RedirectView):
 
     def get(self, request, *args, **kwargs):
         group = get_object_or_404(Group, pk=self.kwargs.get('pk'))
-        delete_member = Member.objects.filter(user=self.request.user, group=group).delete()
+        delete_member = Member.objects.filter(
+        user=self.request.user, group=group).delete()
         if delete_member:
             messages.success(request, 'You leave the group')
         return super(LeaveGroup, self).get(request, *args, **kwargs)
