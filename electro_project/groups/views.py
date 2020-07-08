@@ -42,6 +42,7 @@ class GroupDetailView(DetailView):
         return context
 
 
+# Post in group
 class PostGroupFormView(LoginRequiredMixin, SingleObjectMixin, FormView):
 
     model = Post
@@ -98,6 +99,7 @@ class CreateGroupView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('groups:detail', kwargs={'pk': self.object.pk})
+
 
 # Join Group view
 class JoinGroup(LoginRequiredMixin, RedirectView):

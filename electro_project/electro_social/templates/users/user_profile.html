@@ -1,35 +1,30 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
 {% block page_content %}
-
 <div class="container" id="padding">
   <form method="GET">
     {{ form }}
     <input id="user" type="text" name="user">
   </form>
 </div>
-
 <div class="container">
-            {%  for info in infos  %}
-                {% if forloop.counter0|divisibleby:3 %} <div class="row text-center"> {%  endif %}
-                  <div class="col-md-4">
-                      <div class="card">
-												{% if info.profile_picture %}
-														<img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
-														 {% endif %}
-                          <div class="card-content">
-                              <br>
-                              <h4><a href="{% url 'electro:detail' info.user.pk %}">{{ info.user }}</a></h4>
-                              <hr>
-                               <p>{{ info.description }}</p>
-                              <br>
-
-                          </div><!-- card content -->
-                      </div><!-- card -->
-                  </div><!-- col-md-4 -->
-            {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
-            {%  endfor %}
-         </div><!-- container -->
+  {%  for info in infos  %}
+  {% if forloop.counter0|divisibleby:3 %} <div class="row text-center"> {%  endif %}
+    <div class="col-md-4">
+      <div class="card">
+        {% if info.profile_picture %}
+        <img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
+        {% endif %}
+        <div class="card-content">
+          <br>
+          <h4><a href="{% url 'electro:detail' info.user.pk %}">{{ info.user }}</a></h4>
+          <hr>
+          <p>{{ info.description }}</p>
+          <br>
+        </div>
+      </div>
+    </div>
+    {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><hr>{%  endif %}
+    {%  endfor %}
+  </div>
 {% endblock %}

@@ -1,31 +1,25 @@
 {% extends 'base.html' %}
-
 {% load static %}
-
 {% block page_content %}
-
 {% if post.user_id == user.pk %}
 <div class="container">
   <h1> Update post </h1>
   <a href="{% url 'posts:update' pk=post.pk %}">Update</a>
 </div>
-
 <div class="container">
   <h3>Delete the post</h3>
   <a href="{% url 'posts:delete' pk=post.pk %}">Delete</a>
 </div>
 {% endif %}
-
 <div class="container">
   <h1> {{ post.title }} </h1>
   <ul>
     <li>{{ post.content }}</li>
     <li>{{ post.date_post }}</li>
     <li>{{ post.user }}</li>
-	<li>Like: {{ post.like.count }}</li>
+    <li>Like: {{ post.like.count }}</li>
   </ul>
 </div>
-
 <div class="container">
   <ul>
     {% for comment in comments %}
@@ -35,7 +29,6 @@
     <li>{{ comment.date_post }}</li>
   </ul>
   {% endfor %}
-
 </div>
 <div class="container">
   <form action="{% url 'posts:detail' post.pk %}" method="POST">
@@ -44,25 +37,22 @@
     <input type="submit" class="btn btn-primary" value="comment">
   </form>
 </div>
-
 {% block like_dislike %}
 <div class="container">
 	<p>
-       <form action="{% url 'posts:like' post.pk %}" method="POST">
-		    {% csrf_token %}
-		    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">
-			Like
-		    </button>
- 	     </form>
-		</p>
-	<p>
-        <form action="{% url 'posts:dislike' post.pk %}" method="POST">
-		    {% csrf_token %}
-		    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">
-			 Dislike
-		    </button>
- 	    </form>
-	</p>
+    <form action="{% url 'posts:like' post.pk %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">Like
+      </button>
+    </form>
+  </p>
+  <p>
+    <form action="{% url 'posts:dislike' post.pk %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary">Dislike
+      </button>
+    </form>
+  </p>
 </div>
 {% endblock %}
 {% endblock %}

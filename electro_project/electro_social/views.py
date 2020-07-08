@@ -60,12 +60,10 @@ class UserInfoFormView(FormView, LoginRequiredMixin):
 
 
 # Detail of UserProfile with extra data => - Posts - Groups
-# User's post only showing one post, must be fix
 class DetailUserProfile(DetailView):
 
     template_name = 'users/user_detail.html'
     model = UserInfo
-    #context_object_name = 'info'
 
     def get_object(self):
         return UserInfo.objects.filter(user=self.kwargs['pk'])
@@ -80,7 +78,7 @@ class DetailUserProfile(DetailView):
         return context
 
 
-#Update Userinfo => must be finish
+#Update Userinfo
 class UserInfoUpdate(UpdateView):
     template_name = 'users/user_update.html'
     model = UserInfo
@@ -93,7 +91,7 @@ class UserInfoDelete(DeleteView):
     success_url = reverse_lazy('users/user_profile.html')
 
 
-# working but adding the user who request
+# Send Friend request
 class SendFriendRequest(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
@@ -108,6 +106,7 @@ class SendFriendRequest(LoginRequiredMixin, RedirectView):
         return super(SendFriendRequest, self).get(request, *args, **kwargs)
 
 
+# Accept Friend request 
 class AcceptFriendRequest(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
