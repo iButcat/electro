@@ -1,2 +1,3 @@
 venv/
 electro_project/db.sqlite/
+__pycache__/
