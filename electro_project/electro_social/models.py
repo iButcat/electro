@@ -15,7 +15,7 @@ class User(auth.models.User, auth.models.PermissionsMixin):
 
 
 class UserInfo(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+    user = models.OneToOneField(User,
     on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='img', blank=True)
     description = models.TextField(blank=True)

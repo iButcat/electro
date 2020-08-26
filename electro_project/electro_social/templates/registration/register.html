@@ -3,9 +3,6 @@
 <h1>register</h1>
 <form method="POST">
   {% csrf_token %}
-  {% form %}
-  <input type="submit" name="" value="register">
-  {% buttons %}
-  <button type="submit" class="btn btn-primary">Submit</button>
-  {% endbuttons %}
+  {{ form }}
+  <button type="submit" value="register" class="btn btn-primary">Submit</button>
 {% endblock %}

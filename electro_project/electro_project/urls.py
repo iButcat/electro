@@ -8,7 +8,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.IndexView.as_view(), name='index'),
+    path('', views.IndexView.as_view(), name='index'),
     path('electro/', include('electro_social.urls', namespace='electro')),
     path('electro/', include('django.contrib.auth.urls')),
     path('thanks/', views.ThanksPage.as_view(), name='thanks'),

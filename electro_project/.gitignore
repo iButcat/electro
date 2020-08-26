@@ -1,0 +1,7 @@
+venv/
+db.sqlite
+__pycache__/
+.DS_STORE
+electro_social/migrations
+posts/migrations
+groups/migrations
