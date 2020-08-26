@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% load bootstrap4 %}
 {% block page_content %}
 <h1>register</h1>
 <form method="POST">
   {% csrf_token %}
-  {% bootstrap_form form %}
+  {% form %}
   <input type="submit" name="" value="register">
   {% buttons %}
   <button type="submit" class="btn btn-primary">Submit</button>

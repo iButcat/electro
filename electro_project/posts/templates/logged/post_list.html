@@ -8,7 +8,6 @@
   </div>
 </div>
 
-
 {% else %}
 <div class="padding">
 <div class="container">
@@ -49,7 +48,7 @@
         </div>
       </div>
     </div>
-    {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
+    {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><hr>{%  endif %}
     {%  endfor %}
   </div>
 {% endblock %}

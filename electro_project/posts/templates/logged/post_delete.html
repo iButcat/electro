@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block page_content %}
 {% if user.is_authenticated %}
+
 <form method="POST">
   {% csrf_token %}
   <p> Are you sure you want to delete "{{ post }}?"</p>
@@ -10,5 +11,6 @@
   <a class="btn btn-primary" href="{% url 'electro:signup' %}">SignUp</a>
   <a class="btn btn-primary" href="{% url 'electro:login' %}">Connect</a>
 </div>
+
 {% endif %}
 {% endblock %}

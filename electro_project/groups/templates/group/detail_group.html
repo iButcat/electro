@@ -2,7 +2,7 @@
 
 {% block page_content %}
 
-{% if group.owner == request.user %}       <!-- user.pk -->
+{% if group.owner == request.user %}   
 <div class="container">
   <a href="{% url 'groups:update' pk=group.pk %}">Update Group</a>
 </div>

@@ -14,6 +14,5 @@ urlpatterns = [
   path('update/<int:pk>', views.UpdateGroupView.as_view(), name='update'),
   path('delete/<int:pk>', views.DeleteGroupView.as_view(), name='delete'),
   path('detail/<int:pk>', views.MixinDetailAndFormView.as_view(), name='detail'),
-  path('user/<int:pk>', RedirectView.as_view(pattern_name='electro:detail'), name='redirect'),
-
+  path('user/<int:pk>', RedirectView.as_view(pattern_name='electro:detail'), name='redirect'), 
 ]
