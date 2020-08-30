@@ -43,6 +43,7 @@ class DisplayUserInfoView(ListView):
 
 # this is where we fill the UserInfo => - description - profile pic
 class UserInfoFormView(FormView, LoginRequiredMixin):
+
     template_name = 'users/user_form.html'
     model = UserInfo
     form_class = UserInfoForm
@@ -84,6 +85,19 @@ class UserInfoUpdate(UpdateView):
     model = UserInfo
     fields = ['description', 'profile_picture']
 
+    def get_object(self):
+        return UserInfo.objects.filter(user=self.kwargs['pk']).first()
+
+    def form_valid(self, form):
+        form = UserInfoForm()
+        if self.request.method == "POST":
+            form = UserInfoForm(self.request.POST)
+            if form.is_valid():
+                profile = form.save(commit=False)
+                profile.user = self.request.user
+                profile.save()
+        return super(UserInfoUpdate, self).form_valid(form)
+
 
 # Delete user info
 class UserInfoDelete(DeleteView):
@@ -106,7 +120,7 @@ class SendFriendRequest(LoginRequiredMixin, RedirectView):
         return super(SendFriendRequest, self).get(request, *args, **kwargs)
 
 
-# Accept Friend request 
+# Accept Friend request
 class AcceptFriendRequest(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
