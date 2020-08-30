@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'electro_social',
     'posts',
     'groups',
+    'tailwind',
+    'theme'
 ]
 
 MIDDLEWARE = [
@@ -145,3 +147,5 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATIC_ROOT = 'electro_project/static'
+
+TAILWIND_APP_NAME = 'theme'
