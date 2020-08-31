@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from electro_social.models import UserInfo
+from electro_social.models import Profile
 
 
 class Group(models.Model):
