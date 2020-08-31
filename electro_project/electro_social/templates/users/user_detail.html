@@ -9,7 +9,7 @@
 		<div class="card">
 			{% for info in infos %}
 			{% if info.profile_picture %}
-			<img class="card-image-top" src="{{ infos.profile_picture.url }}" id="profile-picture">
+			<img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
 			{% endif %}
 			<h1 class="card-title"> Profile's name: {{ info.user }} </h1>
 		</div>
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-          {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><!-- row closing --><hr>{%  endif %}
+          {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><hr>{%  endif %}
           {%  endfor %}
         </div>
 

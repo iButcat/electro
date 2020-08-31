@@ -12,9 +12,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
 
-from . import forms
+from .forms import UserCreateForm
 from .forms import UserInfoForm, UserProfileSearchForm
-from .models import UserInfo, FriendRequest
+from .models import Profile, FriendRequest
 
 from posts.models import Post, Commentary
 from groups.models import Group
@@ -22,14 +22,13 @@ from groups.models import Group
 
 # Create an account => signup
 class SignUp(CreateView):
-    form_class = forms.UserCreateForm
+    form_class = UserCreateForm
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
 
-
 # list of all users available
 class DisplayUserInfoView(ListView):
-    model = UserInfo
+    model = Profile
     form_class = UserProfileSearchForm
     template_name = 'users/user_profile.html'
     context_object_name = 'infos'
@@ -37,16 +36,18 @@ class DisplayUserInfoView(ListView):
     def get_queryset(self):
         form = self.form_class(self.request.GET)
         if form.is_valid():
-            return UserInfo.objects.filter(user__username__icontains=form.cleaned_data['user'])
-        return UserInfo.objects.all()
+            return Profile.objects.filter(user__username__icontains=form.cleaned_data['user'])
+        return Profile.objects.all()
 
 
 # this is where we fill the UserInfo => - description - profile pic
 class UserInfoFormView(FormView, LoginRequiredMixin):
-
     template_name = 'users/user_form.html'
-    model = UserInfo
+    model = Profile
     form_class = UserInfoForm
+
+    def get_object(self):
+        return Profile.objects.filter(pk=self.request.user.pk)
 
     def form_valid(self, form):
         form = UserInfoForm()
@@ -57,17 +58,18 @@ class UserInfoFormView(FormView, LoginRequiredMixin):
 
     # suppose to send the success url but not working with args
     def get_success_url(self):
-         return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs})
+         #return reverse_lazy("electro:detail", kwargs={'pk': self.pk})
+         return reverse_lazy("electro:user")
 
 
 # Detail of UserProfile with extra data => - Posts - Groups
 class DetailUserProfile(DetailView):
-
     template_name = 'users/user_detail.html'
-    model = UserInfo
+
 
     def get_object(self):
-        return UserInfo.objects.filter(user=self.kwargs['pk'])
+        return Profile.objects.filter(user=self.kwargs['pk'])
+
 
     def get_context_data(self, **kwargs):
         context = super(DetailUserProfile, self).get_context_data(**kwargs)
@@ -82,11 +84,11 @@ class DetailUserProfile(DetailView):
 #Update Userinfo
 class UserInfoUpdate(UpdateView):
     template_name = 'users/user_update.html'
-    model = UserInfo
+    model = Profile
     fields = ['description', 'profile_picture']
 
     def get_object(self):
-        return UserInfo.objects.filter(user=self.kwargs['pk']).first()
+        return Profile.objects.filter(user=self.kwargs['pk']).first()
 
     def form_valid(self, form):
         form = UserInfoForm()
@@ -101,7 +103,7 @@ class UserInfoUpdate(UpdateView):
 
 # Delete user info
 class UserInfoDelete(DeleteView):
-    model = UserInfo
+    model = Profile
     success_url = reverse_lazy('users/user_profile.html')
 
 
@@ -113,7 +115,7 @@ class SendFriendRequest(LoginRequiredMixin, RedirectView):
         {'pk': self.kwargs.get('pk')})
 
     def get(self, request, *args, **kwargs):
-        user = get_object_or_404(UserInfo, id=self.kwargs.get(('pk')))
+        user = get_object_or_404(Profile, id=self.kwargs.get(('pk')))
         obj, created = FriendRequest.objects.get_or_create(
         from_user = self.request.user,
         to_user=user)

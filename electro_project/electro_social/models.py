@@ -14,20 +14,16 @@ class User(auth.models.User, auth.models.PermissionsMixin):
         return "@{}".format(self.username)
 
 
-class UserInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.PROTECT,
-    blank=True, null=True)
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='img', blank=True, null=True)
     description = models.TextField(blank=True)
-    friends = models.ManyToManyField('UserInfo', blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    friends = models.ManyToManyField('Profile', blank=True)
 
     def __str__(self):
         return "@{}".format(self.user)
-
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            profile, created = UserProfile.objects.get_or_create(user=instance)
-    post_save.connect(create_user_profile, sender=User)
 
     class Meta():
         ordering = ['user']
@@ -35,11 +31,20 @@ class UserInfo(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('electro:detail', kwargs={'pk': self.pk})
 
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, created, **kwargs):
+    instance.profile.save()
+
 
 class FriendRequest(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL,
     related_name='from_user', on_delete=models.CASCADE)
-    to_user = models.ForeignKey(UserInfo,
+    to_user = models.ForeignKey(Profile,
     related_name='to_user', on_delete=models.CASCADE)
 
     def __str__(self):
