@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.urls import reverse_lazy
 
-from electro_social.models import UserInfo
+from electro_social.models import Profile
 
 from groups.models import Group
 

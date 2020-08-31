@@ -14,7 +14,7 @@ from .forms import UserCommentForm, UserPostForm
 from .models import Post, Commentary
 
 from electro_social.views import DetailUserProfile
-from electro_social.models import UserInfo
+from electro_social.models import Profile
 
 
 # see all the post
