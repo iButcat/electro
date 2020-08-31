@@ -128,11 +128,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+AUTH_PROFILE_MODULE = 'electro_social.Profile'
 LOGIN_REDIRECT_URL = 'posts:list'
 LOGOUT_REDIRECT_URL = '/thanks'
 
 STATIC_URL = '/static/'
-
 
 MEDIA_URL = '/img/'
 

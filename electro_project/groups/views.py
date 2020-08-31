@@ -12,7 +12,7 @@ from .forms import GroupFrom, PostForm
 from .models import Group, Member
 
 from django.contrib.auth.models import User
-from electro_social.models import UserInfo
+from electro_social.models import Profile
 
 from posts.models import Post
 
