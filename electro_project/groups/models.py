@@ -8,6 +8,7 @@ class Group(models.Model):
     title = models.CharField(max_length=30)
     description = models.TextField()
     members = models.ManyToManyField(User, blank=True, through='Member')
+    banner = models.ImageField(upload_to='img', blank=True, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL,
     on_delete=models.CASCADE, blank=True, null=True, related_name='owner')
 

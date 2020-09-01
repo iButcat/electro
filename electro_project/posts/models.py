@@ -11,6 +11,7 @@ from groups.models import Group
 class Post(models.Model):
     title = models.CharField(max_length=40)
     content = models.TextField()
+    post_img = models.ImageField(upload_to='img', blank=True, null=True)
     date_post = models.DateTimeField('date published',auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
     on_delete=models.CASCADE)
