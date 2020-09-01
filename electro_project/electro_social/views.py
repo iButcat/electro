@@ -14,7 +14,7 @@ from django.db.models import F
 
 from .forms import UserCreateForm
 from .forms import UserInfoForm, UserProfileSearchForm
-from .models import Profile, FriendRequest
+from .models import Profile
 
 from posts.models import Post, Commentary
 from groups.models import Group
@@ -36,7 +36,9 @@ class DisplayUserInfoView(ListView):
     def get_queryset(self):
         form = self.form_class(self.request.GET)
         if form.is_valid():
-            return Profile.objects.filter(user__username__icontains=form.cleaned_data['user'])
+            return Profile.objects.filter(
+            user__username__icontains=form.cleaned_data['user']
+            )
         return Profile.objects.all()
 
 
@@ -56,10 +58,9 @@ class UserInfoFormView(FormView, LoginRequiredMixin):
             form.save()
         return super(UserInfoFormView, self).form_valid(form)
 
-    # suppose to send the success url but not working with args
+    # need to repear, supposte to redirect user detail.
     def get_success_url(self):
-         #return reverse_lazy("electro:detail", kwargs={'pk': self.pk})
-         return reverse_lazy("electro:user")
+         return reverse_lazy("electro:detail", kwargs={'pk': self.pk})
 
 
 # Detail of UserProfile with extra data => - Posts - Groups
@@ -77,7 +78,6 @@ class DetailUserProfile(DetailView):
         context['posts'] = Post.objects.all().filter(user=self.kwargs['pk'])
         context['post_numbers'] = Post.objects.filter(user=self.kwargs['pk']).count()
         context['groups'] = Group.objects.filter(members=self.kwargs['pk'])
-        context['friends'] = FriendRequest.objects.all()
         return context
 
 
@@ -107,30 +107,19 @@ class UserInfoDelete(DeleteView):
     success_url = reverse_lazy('users/user_profile.html')
 
 
-# Send Friend request
-class SendFriendRequest(LoginRequiredMixin, RedirectView):
+class FollowUserView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         return reverse_lazy('electro:detail', kwargs=
         {'pk': self.kwargs.get('pk')})
 
     def get(self, request, *args, **kwargs):
-        user = get_object_or_404(Profile, id=self.kwargs.get(('pk')))
-        obj, created = FriendRequest.objects.get_or_create(
-        from_user = self.request.user,
-        to_user=user)
-        return super(SendFriendRequest, self).get(request, *args, **kwargs)
-
-
-# Accept Friend request
-class AcceptFriendRequest(LoginRequiredMixin, RedirectView):
-
-    def get_redirect_url(self, *args, **kwargs):
-        return reverse_lazy('electro:detail', kwargs=
-        {'pk': self.kwargs.get('pk')})
-
-    def get(self, request, *args, **kwargs):
-        friend_request = FriendRequest.objects.get(id=self.kwargs['pk'])
-        user_one = request.user
-        user_two = friend_request.from_user
-        return super(AcceptFriendRequest, self).get(request, *args, **kwargs)
+        if request.method == "POST":
+            my_profile = Profile.objects.get(user=self.request.user)
+            pk = request.POST.get('profile_pk')
+            obj = Profile.objects.get(pk=pk)
+            if obj.user in my_profile.followers.all():
+                my_profile.followers.remove(obj.user)
+            else:
+                my_profile.followers.add(obj.user)
+        return super(FollowUserView, self).get(request, *args, **kwargs)
