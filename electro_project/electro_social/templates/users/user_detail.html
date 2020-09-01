@@ -13,19 +13,8 @@
 			{% endif %}
 			<h1 class="card-title"> Profile's name: {{ info.user }} </h1>
 		</div>
-		<ul>
-			<li class="card-text">Bio: {{ info.description }}</li>
-			{% if not info.friends %}
-			<li class="card-text">Friends: {{ info.friends.count }}</li>
-			{% else %}
-			<li>No friends</li>
-			{% endif %}
-			{% endfor %}
-		</ul>
 	</div>
 </div>
-</div>
-
 <div class="container">
           {%  for post in posts  %}
               {% if forloop.counter0|divisibleby:3 %} <div class="row text-center"> {%  endif %}
@@ -41,23 +30,5 @@
           {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><hr>{%  endif %}
           {%  endfor %}
         </div>
-
-	<div class="container">
-			{% for friend in friends %}
-				<p>{{ friend.to_user }}</p>
-				<p>{{ friend.from_user }}</p>
-				{% endfor %}
-			</div>
-			<div class="btn btn-primary">
-			<a href="{% url 'electro:accept' user.id %}">Accept</a>
-			</div>
-				<div class="padding">
-				  <div class="container">
-						<div class="btn btn-primary">
-						<a href="{% url 'electro:add' user.id %}">Add</a>
-					</div>
-    </div>
-</div>
-
 {% endif %}
 {% endblock %}

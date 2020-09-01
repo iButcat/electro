@@ -13,9 +13,9 @@ urlpatterns = [
   ), name='login'),
   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
   path('signup/', views.SignUp.as_view(), name='signup'),
-  path('password/', auth_views.PasswordChangeView.as_view(
+  path('password/', views.PasswordChangeView.as_view(
   template_name="registration/change_password.html"
-  ), name="password"),
+  ), name='password'),
   # user info view and form => user_profile
   path('userform/', views.UserInfoFormView.as_view(),
   name='userform'),

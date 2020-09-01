@@ -6,11 +6,14 @@ CreateView, DeleteView, UpdateView)
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.base import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
 from django.utils import timezone
 from django.http import HttpResponseForbidden
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
+from django.contrib import messages
 
 from .forms import UserCreateForm
 from .forms import UserInfoForm, UserProfileSearchForm
@@ -24,6 +27,11 @@ from groups.models import Group
 class SignUp(CreateView):
     form_class = UserCreateForm
     template_name = 'registration/register.html'
+    success_url = reverse_lazy('login')
+
+
+class PasswordChangeView(PasswordChangeView):
+    form_class = PasswordChangeForm
     success_url = reverse_lazy('login')
 
 # list of all users available
@@ -70,7 +78,6 @@ class DetailUserProfile(DetailView):
 
     def get_object(self):
         return Profile.objects.filter(user=self.kwargs['pk'])
-
 
     def get_context_data(self, **kwargs):
         context = super(DetailUserProfile, self).get_context_data(**kwargs)
@@ -120,6 +127,10 @@ class FollowUserView(LoginRequiredMixin, RedirectView):
             obj = Profile.objects.get(pk=pk)
             if obj.user in my_profile.followers.all():
                 my_profile.followers.remove(obj.user)
+                messages.success(request, 'WOW you are unfollowing {}'.format(
+                my_profile.user))
             else:
                 my_profile.followers.add(obj.user)
+                messages.success(request, 'WOW you are following {}'.format(
+                my_profile.user))
         return super(FollowUserView, self).get(request, *args, **kwargs)
