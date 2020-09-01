@@ -7,12 +7,15 @@ from . import views
 app_name = 'electro'
 
 urlpatterns = [
-  # auth system path => registration/(login.html and register.html)
-  path('login', auth_views.LoginView.as_view(
+  # auth system
+  path('login/', auth_views.LoginView.as_view(
   template_name ='registration/login.html',
   ), name='login'),
   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-  path('signup', views.SignUp.as_view(), name='signup'),
+  path('signup/', views.SignUp.as_view(), name='signup'),
+  path('password/', auth_views.PasswordChangeView.as_view(
+  template_name="registration/change_password.html"
+  ), name="password"),
   # user info view and form => user_profile
   path('userform/', views.UserInfoFormView.as_view(),
   name='userform'),
@@ -23,7 +26,4 @@ urlpatterns = [
   name='update'),
   path('user/<int:pk>/delete/', views.UserInfoDelete.as_view(),
   name='delete'),
-  # suppose to add friends
-  path('add/<int:pk>/', views.SendFriendRequest.as_view(), name='add'),
-  path('accept/<int:pk>', views.AcceptFriendRequest.as_view(), name='accept'),
 ]
