@@ -20,7 +20,7 @@ class Profile(models.Model):
     profile_picture = models.ImageField(upload_to='img', blank=True, null=True)
     description = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    friends = models.ManyToManyField('Profile', blank=True)
+    followers = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="followers")
 
     def __str__(self):
         return "@{}".format(self.user)
@@ -39,13 +39,3 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, created, **kwargs):
     instance.profile.save()
-
-
-class FriendRequest(models.Model):
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL,
-    related_name='from_user', on_delete=models.CASCADE)
-    to_user = models.ForeignKey(Profile,
-    related_name='to_user', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return "@{} to  @{}".format(self.from_user, self.to_user)
