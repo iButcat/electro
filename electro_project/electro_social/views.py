@@ -75,7 +75,6 @@ class UserInfoFormView(FormView, LoginRequiredMixin):
 class DetailUserProfile(DetailView):
     template_name = 'users/user_detail.html'
 
-
     def get_object(self):
         return Profile.objects.filter(user=self.kwargs['pk'])
 

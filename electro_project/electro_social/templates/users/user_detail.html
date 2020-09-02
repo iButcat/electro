@@ -12,10 +12,18 @@
 			<img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
 			{% endif %}
 			<h1 class="card-title"> Profile's name: {{ info.user }} </h1>
+			<p>{{ info.description }}</p>
+			{% if info.followers %}
+			<h4>Followers</h4>
+			<p>{{ info.followers.count }}</p>
+			{% else %}
+			<p>No follower</p>
+			{% endif %}
 		</div>
 	</div>
 </div>
 <div class="container">
+	{% endfor %}
           {%  for post in posts  %}
               {% if forloop.counter0|divisibleby:3 %} <div class="row text-center"> {%  endif %}
                 <div class="col-md-4">
@@ -30,5 +38,5 @@
           {%  if forloop.counter|divisibleby:3 or forloop.last %}</div><hr>{%  endif %}
           {%  endfor %}
         </div>
-{% endif %}
+				{% endif %}
 {% endblock %}
