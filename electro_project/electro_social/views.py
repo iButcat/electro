@@ -120,7 +120,7 @@ class FollowUserView(LoginRequiredMixin, RedirectView):
         {'pk': self.kwargs.get('pk')})
 
     def get(self, request, *args, **kwargs):
-        if request.method == "POST":
+        if self.request.method == "POST":
             my_profile = Profile.objects.get(user=self.request.user)
             pk = request.POST.get('profile_pk')
             obj = Profile.objects.get(pk=pk)
