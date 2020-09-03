@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block page_content %}
+
+{% csrf_token %}
+{{ form }}
+<input type="submit" class="btn btn-primary" value="update">
+
+{% endblock %}
