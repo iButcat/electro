@@ -23,7 +23,7 @@ class Profile(models.Model):
     followers = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="followers")
 
     def __str__(self):
-        return "@{}".format(self.user)
+        return "@{}".format(self.user.username)
 
     class Meta():
         ordering = ['user']

@@ -7,7 +7,7 @@ from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.base import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, UserChangeForm
 from django.utils import timezone
 from django.http import HttpResponseForbidden
 from django.contrib.auth.models import User
@@ -15,8 +15,12 @@ from django.db import models
 from django.db.models import F
 from django.contrib import messages
 
-from .forms import UserCreateForm
-from .forms import UserInfoForm, UserProfileSearchForm
+from .forms import (
+UserCreateForm,
+UserInfoForm,
+UserProfileSearchForm,
+UserUpdateForm
+)
 from .models import Profile
 
 from posts.models import Post, Commentary
@@ -30,6 +34,14 @@ class SignUp(CreateView):
     success_url = reverse_lazy('login')
 
 
+class EditSettingsView(UpdateView):
+    form_class = UserUpdateForm
+    template_name = 'registration/update_user.html'
+    success_url = reverse_lazy('posts:list')
+
+    def get_object(self):
+        return self.request.user
+
 class PasswordChangeView(PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('login')
@@ -38,7 +50,7 @@ class PasswordChangeView(PasswordChangeView):
 class DisplayUserInfoView(ListView):
     model = Profile
     form_class = UserProfileSearchForm
-    template_name = 'users/user_profile.html'
+    template_name = 'profiles/profile_list.html'
     context_object_name = 'infos'
 
     def get_queryset(self):
@@ -52,28 +64,30 @@ class DisplayUserInfoView(ListView):
 
 # this is where we fill the UserInfo => - description - profile pic
 class UserInfoFormView(FormView, LoginRequiredMixin):
-    template_name = 'users/user_form.html'
+    template_name = 'profiles/profile_form.html'
     model = Profile
     form_class = UserInfoForm
 
     def get_object(self):
-        return Profile.objects.filter(pk=self.request.user.pk)
+        return get_object_or_404(Profile, user__username=self.kwargs['username'])
 
     def form_valid(self, form):
         form = UserInfoForm()
         if form.is_valid():
-            form.instance.user = self.request.user
-            form.save()
+            form.save(commit=False)
+            user = self.get_object()
+            form.instance.user = user
+            form.save(commit=True)
         return super(UserInfoFormView, self).form_valid(form)
 
     # need to repear, supposte to redirect user detail.
     def get_success_url(self):
-         return reverse_lazy("electro:detail", kwargs={'pk': self.pk})
+         return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs.get('pk')})
 
 
 # Detail of UserProfile with extra data => - Posts - Groups
 class DetailUserProfile(DetailView):
-    template_name = 'users/user_detail.html'
+    template_name = 'profiles/profile_detail.html'
 
     def get_object(self):
         return Profile.objects.filter(user=self.kwargs['pk'])
@@ -89,28 +103,33 @@ class DetailUserProfile(DetailView):
 
 #Update Userinfo
 class UserInfoUpdate(UpdateView):
-    template_name = 'users/user_update.html'
+    template_name = 'profiles/profile_update.html'
+    form_class = UserInfoForm
     model = Profile
     fields = ['description', 'profile_picture']
 
-    def get_object(self):
-        return Profile.objects.filter(user=self.kwargs['pk']).first()
+    def get_object(self, **kwargs):
+        username = self.kwargs.get("username")
+        if username is None:
+            print("error")
+        return get_object_or_404(Profile, user__username__iexact=username)
 
     def form_valid(self, form):
         form = UserInfoForm()
         if self.request.method == "POST":
             form = UserInfoForm(self.request.POST)
             if form.is_valid():
-                profile = form.save(commit=False)
-                profile.user = self.request.user
-                profile.save()
+                form.save(commit=True)
         return super(UserInfoUpdate, self).form_valid(form)
 
+    def get_success_url(self):
+        return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs.get('pk')})
 
+        
 # Delete user info
 class UserInfoDelete(DeleteView):
     model = Profile
-    success_url = reverse_lazy('users/user_profile.html')
+    success_url = reverse_lazy('profiles/profile_list.html')
 
 
 class FollowUserView(LoginRequiredMixin, RedirectView):

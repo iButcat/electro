@@ -13,6 +13,7 @@ urlpatterns = [
   ), name='login'),
   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
   path('signup/', views.SignUp.as_view(), name='signup'),
+  path('update_settings/', views.EditSettingsView.as_view(), name="update_settings"),
   path('password/', views.PasswordChangeView.as_view(
   template_name="registration/change_password.html"
   ), name='password'),
