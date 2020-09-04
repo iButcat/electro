@@ -27,14 +27,13 @@ from posts.models import Post, Commentary
 from groups.models import Group
 
 
-# Create an account => signup
 class SignUp(CreateView):
     form_class = UserCreateForm
     template_name = 'registration/register.html'
     success_url = reverse_lazy('login')
 
 
-class EditSettingsView(UpdateView):
+class UserEdit(UpdateView):
     form_class = UserUpdateForm
     template_name = 'registration/update_user.html'
     success_url = reverse_lazy('posts:list')
@@ -46,8 +45,8 @@ class PasswordChangeView(PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('login')
 
-# list of all users available
-class DisplayUserInfoView(ListView):
+
+class ProfileList(ListView):
     model = Profile
     form_class = UserProfileSearchForm
     template_name = 'profiles/profile_list.html'
@@ -62,39 +61,32 @@ class DisplayUserInfoView(ListView):
         return Profile.objects.all()
 
 
-# this is where we fill the UserInfo => - description - profile pic
-class UserInfoFormView(FormView, LoginRequiredMixin):
+class ProfileForm(FormView, LoginRequiredMixin):
     template_name = 'profiles/profile_form.html'
     model = Profile
     form_class = UserInfoForm
 
-    def get_object(self):
-        return get_object_or_404(Profile, user__username=self.kwargs['username'])
+    def get_success_url(self):
+        return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs.get('pk')})
 
     def form_valid(self, form):
-        form = UserInfoForm()
-        if form.is_valid():
-            form.save(commit=False)
-            user = self.get_object()
-            form.instance.user = user
-            form.save(commit=True)
-        return super(UserInfoFormView, self).form_valid(form)
-
-    # need to repear, supposte to redirect user detail.
-    def get_success_url(self):
-         return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs.get('pk')})
+        if self.request.method == "POST":
+            obj = get_object_or_404(Profile, pk=self.kwargs['pk'])
+            form = UserInfoForm(self.request.POST, instance=obj)
+            if form.is_valid():
+                form.save(commit=True)
+        return super(ProfileForm, self).form_valid(form)
 
 
-# Detail of UserProfile with extra data => - Posts - Groups
-class DetailUserProfile(DetailView):
+class ProfileDetail(DetailView):
     template_name = 'profiles/profile_detail.html'
 
     def get_object(self):
         return Profile.objects.filter(user=self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
-        context = super(DetailUserProfile, self).get_context_data(**kwargs)
-        context['infos'] = self.get_object()
+        context = super(ProfileDetail, self).get_context_data(**kwargs)
+        context['infos'] = self.get_object() # profile
         context['posts'] = Post.objects.all().filter(user=self.kwargs['pk'])
         context['post_numbers'] = Post.objects.filter(user=self.kwargs['pk']).count()
         context['groups'] = Group.objects.filter(members=self.kwargs['pk'])
@@ -102,38 +94,29 @@ class DetailUserProfile(DetailView):
 
 
 #Update Userinfo
-class UserInfoUpdate(UpdateView):
+class ProfileUpdate(UpdateView):
     template_name = 'profiles/profile_update.html'
-    form_class = UserInfoForm
     model = Profile
     fields = ['description', 'profile_picture']
 
-    def get_object(self, **kwargs):
-        username = self.kwargs.get("username")
-        if username is None:
-            print("error")
-        return get_object_or_404(Profile, user__username__iexact=username)
-
     def form_valid(self, form):
-        form = UserInfoForm()
         if self.request.method == "POST":
-            form = UserInfoForm(self.request.POST)
+            obj = get_object_or_404(Profile, pk=self.kwargs['pk'])
+            form = UserInfoForm(self.request.POST, instance=obj)
             if form.is_valid():
                 form.save(commit=True)
-        return super(UserInfoUpdate, self).form_valid(form)
+        return super(ProfileUpdate, self).form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs.get('pk')})
 
-        
-# Delete user info
-class UserInfoDelete(DeleteView):
+
+class ProfileDelete(DeleteView):
     model = Profile
     success_url = reverse_lazy('profiles/profile_list.html')
 
 
-class FollowUserView(LoginRequiredMixin, RedirectView):
-
+class FollowProfileRedirect(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse_lazy('electro:detail', kwargs=
         {'pk': self.kwargs.get('pk')})
@@ -151,4 +134,4 @@ class FollowUserView(LoginRequiredMixin, RedirectView):
                 my_profile.followers.add(obj.user)
                 messages.success(request, 'WOW you are following {}'.format(
                 my_profile.user))
-        return super(FollowUserView, self).get(request, *args, **kwargs)
+        return super(FollowProfileRedirect, self).get(request, *args, **kwargs)

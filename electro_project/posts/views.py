@@ -13,7 +13,7 @@ from django.views.generic.base import RedirectView
 from .forms import UserCommentForm, UserPostForm
 from .models import Post, Commentary
 
-from electro_social.views import DetailUserProfile
+from electro_social.views import ProfileDetail
 from electro_social.models import Profile
 
 

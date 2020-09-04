@@ -16,17 +16,20 @@ class User(auth.models.User, auth.models.PermissionsMixin):
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE)
+    on_delete=models.CASCADE, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='img', blank=True, null=True)
     description = models.TextField(blank=True)
     birth_date = models.DateField(null=True, blank=True)
     followers = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="followers")
 
     def __str__(self):
-        return "@{}".format(self.user.username)
+        return "@{}".format(self.user)
 
     class Meta():
         ordering = ['user']
+
+    def get_absolute_url(self):
+         return reverse('detail', kwargs={'pk': self.pk})
 
     def get_absolute_url(self):
         return reverse_lazy('electro:detail', kwargs={'pk': self.pk})
