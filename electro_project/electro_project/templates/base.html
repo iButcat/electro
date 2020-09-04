@@ -36,7 +36,7 @@
   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">User</button>
    <div class="dropdown-menu">
       <a class="dropdown-item" href="{% url 'redirect' request.user.pk %}">Your Profile</a>
-      <a class="dropdown-item" href="{% url 'electro:user' %}">Profile</a>
+      <a class="dropdown-item" href="{% url 'electro:users' %}">Profile</a>
       <a class="dropdown-item" href="{% url 'electro:update' request.user.pk %}">Modify</a>
       <div class="dropdown-divider"></div>
    <a class="dropdown-item" href="{% url 'electro:logout' %}">Logout</a>
