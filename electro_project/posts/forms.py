@@ -9,8 +9,8 @@ class UserPostForm(ModelForm):
         fields = ['title', 'content']
 
         widgets= {
-        'title': forms.TextInput(attrs={'class': 'textinputclass'}),
-        'content': forms.Textarea(attrs={'class': 'editable medium-editor-textarea postcontent'}),
+        'title': forms.TextInput(attrs={'class': 'form-control'}),
+        'content': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 
@@ -21,6 +21,6 @@ class UserCommentForm(ModelForm):
         exclude = ['group']
 
         widgets = {
-        'title': forms.TextInput(attrs={'class': 'textinputclass'}),
-        'comment': forms.Textarea(attrs={'class': 'editable medium-editor-textarea'}),
+        'title': forms.TextInput(attrs={'class': 'form-control'}),
+        'comment': forms.Textarea(attrs={'class': 'form-control'}),
         }

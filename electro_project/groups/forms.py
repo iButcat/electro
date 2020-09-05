@@ -11,8 +11,8 @@ class GroupFrom(ModelForm):
         fields = ['title', 'description']
 
         widgets= {
-        'title': forms.TextInput(attrs={'class': 'textinputclass'}),
-        'description': forms.Textarea(attrs={'class': 'editable medium-editor-textarea postcontent'}),
+        'title': forms.TextInput(attrs={'class': 'form-control'}),
+        'description': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 
@@ -22,6 +22,6 @@ class PostForm(ModelForm):
         fields = ['title', 'content']
 
         widgets= {
-        'title': forms.TextInput(attrs={'class': 'textinputclass'}),
-        'content': forms.Textarea(attrs={'class': 'editable medium-editor-textarea postcontent'}),
+        'title': forms.TextInput(attrs={'class': 'form-control'}),
+        'content': forms.Textarea(attrs={'class': 'form-control'}),
         }
