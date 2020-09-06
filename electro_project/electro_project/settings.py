@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # app
-    'electro_social',
+    'electro_social.apps.ElectroSocialConfig',
     'posts',
     'groups',
     # tailwind config
