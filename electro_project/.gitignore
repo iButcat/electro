@@ -5,3 +5,4 @@ __pycache__/
 electro_social/migrations
 posts/migrations
 groups/migrations
+electro_project/static
