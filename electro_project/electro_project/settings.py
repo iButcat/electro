@@ -123,16 +123,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = [
   os.path.join(BASE_DIR, 'static'),
-  'electro_social/static/',
-  'posts/static/',
-  'groups/static'
 ]
 
 MEDIA_URL = '/img/'
-
-# probably need to delete the /img because overwritting it => img/img
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATIC_ROOT = 'electro_project/static'

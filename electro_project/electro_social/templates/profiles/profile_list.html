@@ -14,6 +14,8 @@
       <div class="card">
         {% if info.profile_picture %}
         <img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
+        {% else %}
+        <img class="card-image-top" src="{% static '/img/no-profile.jpg' %}" id="profile-picture">
         {% endif %}
         <div class="card-content">
           <br>

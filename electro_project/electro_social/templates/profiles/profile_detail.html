@@ -10,6 +10,8 @@
 			{% for info in infos %}
 			{% if info.profile_picture %}
 			<img class="card-image-top" src="{{ info.profile_picture.url }}" id="profile-picture">
+			{% else %}
+			<img class="card-image-top" src="{% static '/img/no-profile.jpg' %}" id="profile-picture">
 			{% endif %}
 			<h1 class="card-title"> Profile's name: {{ info.user }} </h1>
 			<p>{{ info.description }}</p>
@@ -19,6 +21,7 @@
 			{% else %}
 			<p>No follower</p>
 			{% endif %}
+			<a href="{% url 'electro:follow' user.pk %}">Follow</a>
 		</div>
 	</div>
 </div>
