@@ -17,9 +17,6 @@ urlpatterns = [
   path('password/', views.PasswordChangeView.as_view(
   template_name="registration/change_password.html"
   ), name='password'),
-  # user info view and form => user_profile
-  path('userform/<int:pk>', views.ProfileForm.as_view(),
-  name='userform'),
   path('users/', views.ProfileList.as_view(), name='users'),
   path('user/<int:pk>/', views.ProfileDetail.as_view(), name='detail'),
   # user update and delete => user_profile
@@ -27,4 +24,5 @@ urlpatterns = [
   name='update'),
   path('user/<int:pk>/delete/', views.ProfileUpdate.as_view(),
   name='delete'),
+  path('follow/<int:pk>', views.FollowProfileRedirect.as_view(), name="follow"),
 ]

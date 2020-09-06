@@ -1,8 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.urls import reverse_lazy, reverse
-from django.views.generic.edit import (FormView, SingleObjectMixin,
-CreateView, DeleteView, UpdateView)
+from django.views.generic.edit import (
+FormView,
+SingleObjectMixin,
+CreateView,
+DeleteView,
+UpdateView
+)
 from django.views.generic.list import MultipleObjectMixin
 from django.views.generic.base import RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +19,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
 from django.contrib import messages
-
 from .forms import (
 UserCreateForm,
 UserInfoForm,
@@ -61,23 +65,6 @@ class ProfileList(ListView):
         return Profile.objects.all()
 
 
-class ProfileForm(FormView, LoginRequiredMixin):
-    template_name = 'profiles/profile_form.html'
-    model = Profile
-    form_class = UserInfoForm
-
-    def get_success_url(self):
-        return reverse_lazy("electro:detail", kwargs={'pk': self.kwargs.get('pk')})
-
-    def form_valid(self, form):
-        if self.request.method == "POST":
-            obj = get_object_or_404(Profile, pk=self.kwargs['pk'])
-            form = UserInfoForm(self.request.POST, instance=obj)
-            if form.is_valid():
-                form.save(commit=True)
-        return super(ProfileForm, self).form_valid(form)
-
-
 class ProfileDetail(DetailView):
     template_name = 'profiles/profile_detail.html'
 
@@ -93,7 +80,6 @@ class ProfileDetail(DetailView):
         return context
 
 
-#Update Userinfo
 class ProfileUpdate(UpdateView):
     template_name = 'profiles/profile_update.html'
     model = Profile
@@ -114,7 +100,7 @@ class ProfileUpdate(UpdateView):
 class ProfileDelete(DeleteView):
     model = Profile
     success_url = reverse_lazy('profiles/profile_list.html')
-
+    
 
 class FollowProfileRedirect(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
@@ -124,7 +110,7 @@ class FollowProfileRedirect(LoginRequiredMixin, RedirectView):
     def get(self, request, *args, **kwargs):
         if self.request.method == "POST":
             my_profile = Profile.objects.get(user=self.request.user)
-            pk = request.POST.get('profile_pk')
+            pk = request.POST.get('pk')
             obj = Profile.objects.get(pk=pk)
             if obj.user in my_profile.followers.all():
                 my_profile.followers.remove(obj.user)

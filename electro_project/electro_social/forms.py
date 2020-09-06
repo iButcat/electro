@@ -8,6 +8,18 @@ from .models import Profile
 
 
 class UserCreateForm(UserCreationForm):
+    username = forms.CharField(
+    widget=forms.TextInput(
+    attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+    email = forms.EmailField(widget=(forms.TextInput(
+    attrs={'class': 'form-control'})))
+    password1 = forms.CharField(label=('Password'),
+    widget=(forms.PasswordInput
+    (attrs={'class': 'form-control'})))
+    password2 = forms.CharField(label=('Password Confirmation'),
+    widget=forms.PasswordInput(
+    attrs={'class': 'form-control'}))
+
 
     class Meta:
         fields = ('username', 'email', 'password1', 'password2')
@@ -33,7 +45,7 @@ class UserUpdateForm(UserChangeForm):
 class UserInfoForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ['profile_picture', 'description']
+        fields = ['profile_picture', 'description', 'birth_date']
 
 
 class UserProfileSearchForm(forms.Form):
