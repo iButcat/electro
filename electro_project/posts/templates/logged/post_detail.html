@@ -3,11 +3,7 @@
 {% block page_content %}
 {% if post.user_id == user.pk %}
 <div class="container">
-  <h1> Update post </h1>
   <a href="{% url 'posts:update' pk=post.pk %}">Update</a>
-</div>
-<div class="container">
-  <h3>Delete the post</h3>
   <a href="{% url 'posts:delete' pk=post.pk %}">Delete</a>
 </div>
 {% endif %}
@@ -28,6 +24,12 @@
     <li><a href="{% url 'posts:redirect' comment.from_user.pk %}">{{ comment.from_user }}</a></li>
     <li>{{ comment.date_post }}</li>
   </ul>
+  {% if post.user_id == user.pk %}
+  <div class="container">
+    <a href="{% url 'posts:comment_delete' pk=comment.pk %}">Delete</a>
+    <a href="{% url 'posts:comment_update' pk=comment.pk %}">Update</a>
+  </div>
+  {% endif %}
   {% endfor %}
 </div>
 <div class="container">
