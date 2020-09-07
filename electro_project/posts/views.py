@@ -19,7 +19,6 @@ from electro_social.models import Profile
 
 # see all the post
 class PostListView(ListView):
-
     template_name = 'logged/post_list.html'
     context_object_name = 'posts'
     model = Post
@@ -34,7 +33,6 @@ class PostListView(ListView):
 
 # => Create post
 class CreatePostView(LoginRequiredMixin, CreateView):
-
     login_url = 'electro/login'
     template_name = 'logged/create_post.html'
     form_class = UserPostForm
@@ -53,7 +51,6 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 
 # => Update post view
 class UpdatePostView(LoginRequiredMixin, UpdateView):
-
     login_url = 'electro/login'
     template_name = 'logged/post_update.html'
     form_class = UserPostForm
@@ -65,7 +62,7 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
     # filter if the current user is the author
     def get_queryset(self):
         queryset = super(UpdatePostView, self).get_queryset()
-        queryset = queryset.filter(from_user=self.request.user)
+        queryset = queryset.filter(user=self.request.user)
         return queryset
 
     def form_valid(self, form):
@@ -79,7 +76,6 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
 
 # => Delete Post
 class DeletePostView(LoginRequiredMixin, DeleteView):
-
     template_name = 'logged/post_delete.html'
     context_object_name = 'post'
     model = Post
@@ -89,7 +85,7 @@ class DeletePostView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         queryset = super(DeletePostView, self).get_queryset()
-        queryset = queryset.filter(from_user=self.request.user)
+        queryset = queryset.filter(user=self.request.user)
         return queryset
 
     def get_success_url(self):
@@ -99,7 +95,6 @@ class DeletePostView(LoginRequiredMixin, DeleteView):
 # 3 part => Mixed views
 # 1 part => detail view with context data for forms and comments
 class PostDetailView(DetailView):
-
     template_name = 'logged/post_detail.html'
     model = Post
     context_object_name = 'post'
@@ -175,3 +170,43 @@ class RedirectAddDislike(LoginRequiredMixin, RedirectView):
         post = get_object_or_404(Post, id=request.POST.get('post_id'))
         post.like.remove(self.request.user)
         return super(RedirectAddDislike, self).get(request, *args, **kwargs)
+
+
+class CommentDelete(DeleteView):
+    template_name = 'logged/comment_delete.html'
+    context_object_name = 'comment'
+    model = Commentary
+
+    def get_object(self, queryset=None):
+        return Commentary.objects.filter(pk=self.kwargs['pk']).first()
+
+    def get_queryset(self):
+        queryset = super(CommentDelete, self).get_queryset()
+        queryset = queryset.filter(from_user=self.request.user)
+        return queryset
+
+    def get_success_url(self):
+        return reverse_lazy('posts:detail', kwargs={'pk': self.object.pk})
+
+
+class CommentUpdate(UpdateView):
+    template_name = 'logged/comment_update.html'
+    form_class = UserCommentForm
+    model = Commentary
+
+    def get_object(self, queryset=None):
+        return Commentary.objects.filter(pk=self.kwargs['pk']).first()
+
+        # filter if the current user is the author
+    def get_queryset(self):
+        queryset = super(CommentUpdate, self).get_queryset()
+        queryset = queryset.filter(from_user=self.request.user)
+        return queryset
+
+    def form_valid(self, form):
+        if form.is_valid():
+            form.save()
+            return super(CommentUpdate, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('posts:detail', kwargs={'pk': self.object.pk})

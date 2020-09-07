@@ -24,5 +24,9 @@ urlpatterns = [
   pattern_name='electro:detail', permanent=False), name='redirect'),
   # add like on post
   path('like/<int:pk>', views.RedirectAddLike.as_view(), name='like'),
-  path('dislike/<int:pk>', views.RedirectAddDislike.as_view(), name='dislike')
+  path('dislike/<int:pk>', views.RedirectAddDislike.as_view(), name='dislike'),
+  path('delete/<int:pk>/comment', views.CommentDelete.as_view(),
+  name='comment_delete'),
+  path('update/<int:pk>/update', views.CommentUpdate.as_view(),
+  name='comment_update'),
 ]
