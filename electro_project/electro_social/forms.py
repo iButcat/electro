@@ -10,16 +10,15 @@ from .models import Profile
 class UserCreateForm(UserCreationForm):
     username = forms.CharField(
     widget=forms.TextInput(
-    attrs={'class': 'form-control', 'placeholder': 'First Name'}))
+    attrs={'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline', 'placeholder': 'username'}))
     email = forms.EmailField(widget=(forms.TextInput(
-    attrs={'class': 'form-control'})))
-    password1 = forms.CharField(label=('Password'),
+    attrs={'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline', 'placeholder': 'email'})))
+    password1 = forms.CharField(
     widget=(forms.PasswordInput
-    (attrs={'class': 'form-control'})))
-    password2 = forms.CharField(label=('Password Confirmation'),
+    (attrs={'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline', 'placeholder': 'password'})))
+    password2 = forms.CharField(
     widget=forms.PasswordInput(
-    attrs={'class': 'form-control'}))
-
+    attrs={'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline', 'placeholder': 'repeat password'}))
 
     class Meta:
         fields = ('username', 'email', 'password1', 'password2')
@@ -29,7 +28,6 @@ class UserCreateForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'username'
         self.fields['email'].label = 'email'
-
 
 class UserUpdateForm(UserChangeForm):
     class Meta:

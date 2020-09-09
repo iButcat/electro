@@ -30,7 +30,7 @@ class Post(models.Model):
         return reverse_lazy('detail', kwargs={'pk': self.pk})
 
 
-class Commentary(models.Model):
+class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, blank=True,
     null=True)
     title = models.CharField(max_length=30)
@@ -38,6 +38,8 @@ class Commentary(models.Model):
     date_post = models.DateTimeField('date published',auto_now_add=True)
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL,
     on_delete=models.CASCADE, blank=True, null=True)
+    like = models.ManyToManyField(User, related_name='comment_like',
+    blank=True)
 
     def __str__(self):
         return "{}, {}".format(self.from_user, self.title)

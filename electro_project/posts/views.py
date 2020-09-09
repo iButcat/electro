@@ -11,13 +11,12 @@ from django.shortcuts import reverse
 from django.views.generic.base import RedirectView
 
 from .forms import UserCommentForm, UserPostForm
-from .models import Post, Commentary
+from .models import Post, Comment
 
 from electro_social.views import ProfileDetail
 from electro_social.models import Profile
 
 
-# see all the post
 class PostListView(ListView):
     template_name = 'logged/post_list.html'
     context_object_name = 'posts'
@@ -31,7 +30,6 @@ class PostListView(ListView):
         return reverse_lazy('posts:detail')
 
 
-# => Create post
 class CreatePostView(LoginRequiredMixin, CreateView):
     login_url = 'electro/login'
     template_name = 'logged/create_post.html'
@@ -49,7 +47,6 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         return reverse("posts:detail", kwargs={'pk': self.object.pk})
 
 
-# => Update post view
 class UpdatePostView(LoginRequiredMixin, UpdateView):
     login_url = 'electro/login'
     template_name = 'logged/post_update.html'
@@ -101,7 +98,7 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(PostDetailView, self).get_context_data(**kwargs)
-        comments = Commentary.objects.filter(post=self.kwargs['pk'])
+        comments = Comment.objects.filter(post=self.kwargs['pk'])
         context['comments'] = comments
         context['form'] = UserCommentForm()
         return context
@@ -111,7 +108,7 @@ class PostDetailView(DetailView):
 class CommentFormView(LoginRequiredMixin, SingleObjectMixin, FormView):
 
     template_name = 'logged/post_detail.html'
-    model = Commentary
+    model = Comment
     form_class = UserCommentForm
 
     def get_object(self):
@@ -175,10 +172,10 @@ class RedirectAddDislike(LoginRequiredMixin, RedirectView):
 class CommentDelete(DeleteView):
     template_name = 'logged/comment_delete.html'
     context_object_name = 'comment'
-    model = Commentary
+    model = Comment
 
     def get_object(self, queryset=None):
-        return Commentary.objects.filter(pk=self.kwargs['pk']).first()
+        return Comment.objects.filter(pk=self.kwargs['pk']).first()
 
     def get_queryset(self):
         queryset = super(CommentDelete, self).get_queryset()
@@ -192,10 +189,10 @@ class CommentDelete(DeleteView):
 class CommentUpdate(UpdateView):
     template_name = 'logged/comment_update.html'
     form_class = UserCommentForm
-    model = Commentary
+    model = Comment
 
     def get_object(self, queryset=None):
-        return Commentary.objects.filter(pk=self.kwargs['pk']).first()
+        return Comment.objects.filter(pk=self.kwargs['pk']).first()
 
         # filter if the current user is the author
     def get_queryset(self):

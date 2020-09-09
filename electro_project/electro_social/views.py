@@ -27,7 +27,7 @@ UserUpdateForm
 )
 from .models import Profile
 
-from posts.models import Post, Commentary
+from posts.models import Post, Comment
 from groups.models import Group
 
 
@@ -100,7 +100,7 @@ class ProfileUpdate(UpdateView):
 class ProfileDelete(DeleteView):
     model = Profile
     success_url = reverse_lazy('profiles/profile_list.html')
-    
+
 
 class FollowProfileRedirect(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):

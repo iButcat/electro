@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms
-from .models import Commentary, Post
+from .models import Comment, Post
 
 
 class UserPostForm(ModelForm):
@@ -16,7 +16,7 @@ class UserPostForm(ModelForm):
 
 class UserCommentForm(ModelForm):
     class Meta:
-        model = Commentary
+        model = Comment
         fields = ['title', 'comment']
         exclude = ['group']
 

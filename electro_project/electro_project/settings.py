@@ -27,9 +27,6 @@ INSTALLED_APPS = [
     'electro_social.apps.ElectroSocialConfig',
     'posts',
     'groups',
-    # tailwind config
-    'tailwind',
-    'theme',
     # notifications sytem
     'notifications',
 ]
@@ -133,6 +130,3 @@ MEDIA_URL = '/img/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/')
 
 STATIC_ROOT = 'electro_project/static'
-
-# tailwing config
-TAILWIND_APP_NAME = 'theme'
