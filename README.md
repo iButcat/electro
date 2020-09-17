@@ -9,6 +9,14 @@ Django Social Media Clone
 - Post about your journey 
 - Join group and post in it 
 
+<h1>Goal</h1>
+
+This application was for learning purpose with Django and Python. 
+That was my first "big" application. It taught me how to use an auth 
+system and some complex features of Django like signals who save a profile
+when an user is created, overwrite class based views, and how to deal with 
+multiple app with many different models.
+
 <h1>Installation</h1>
 
 Change directory to blog_backend and setup a virtual environment:
@@ -45,9 +53,6 @@ python3 manage.py runserver
 
 the backend is now running on http://127.0.0.1:8000 !
 
-<h1>Goal</h1>
-
-This application was for learning purpose with Django and Python. 
 
 <h1>To do </h1>
 
